@@ -9,19 +9,21 @@ if len(sys.argv) != 2:
 
 dpath = sys.argv[1]
 
-fname_l = glob(dpath + '/*.lvm')
-fname_l.sort()
+fnames = glob(dpath + '/*.lvm')
+fnames.sort()
 
 data = []
 print "loading files..."
-for fi, fname in enumerate(fname_l):
+for fi, fname in enumerate(fnames):
     print fname, fi+1
     arr = np.loadtxt(fname, delimiter=',')
     data += [arr]
 print "convert to ndarray..."
 data = np.array(data)
 
-out_fname = dpath + '.npy'
+out_fname = dpath + '.npz'
 print "saving", out_fname
-np.save(open(out_fname, 'wb+'), data)
+np.savez(out_fname, data=data, fnames=fnames)
 
+print "verifying..."
+print np.load(out_fname).files
